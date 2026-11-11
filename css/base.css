@@ -1,5 +1,21 @@
 /* CorteYa - Variables de diseño, tipografía y reset */
 
+/* Fuentes alojadas en el proyecto (licencia SIL OFL): funcionan sin conexión */
+@font-face {
+  font-family: "Archivo";
+  src: url("../assets/fonts/archivo-variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Source Sans 3";
+  src: url("../assets/fonts/source-sans-3-variable.woff2") format("woff2");
+  font-weight: 200 900;
+  font-display: swap;
+}
+
 :root {
   /* Colores: los del poste de barbería sobre papel frío */
   --tinta: #14213d;
