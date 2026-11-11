@@ -1,0 +1,163 @@
+/* CorteYa - Variables de diseño, tipografía y reset */
+
+:root {
+  /* Colores: los del poste de barbería sobre papel frío */
+  --tinta: #14213d;
+  --tinta-suave: #2a3a5c;
+  --rojo: #c2362b;
+  --rojo-oscuro: #9e2a21;
+  --acero: #3e64a3;
+  --papel: #f3f5f8;
+  --blanco: #ffffff;
+  --linea: #d8dee8;
+  --gris: #5a6478;
+  --ok: #2e7d5b;
+  --ok-fondo: #e3f2ea;
+  --alerta: #9a6a14;
+  --alerta-fondo: #fbf0d9;
+  --error-fondo: #fbe4e2;
+  --info-fondo: #e4ebf6;
+
+  /* Tipografía */
+  --fuente-titulo: "Archivo", "Arial Narrow", Arial, sans-serif;
+  --fuente-texto: "Source Sans 3", "Segoe UI", Roboto, Arial, sans-serif;
+  --t-xs: 0.8125rem;
+  --t-sm: 0.9375rem;
+  --t-md: 1.0625rem;
+  --t-lg: 1.375rem;
+  --t-xl: 1.875rem;
+  --t-2xl: clamp(2.25rem, 1.4rem + 3.6vw, 4.25rem);
+
+  /* Espaciado y formas */
+  --e-1: 0.25rem;
+  --e-2: 0.5rem;
+  --e-3: 0.75rem;
+  --e-4: 1rem;
+  --e-5: 1.5rem;
+  --e-6: 2rem;
+  --e-7: 3rem;
+  --e-8: 4.5rem;
+  --radio-sm: 6px;
+  --radio: 10px;
+  --ancho: 72rem;
+  --alto-encabezado: 4rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--alto-encabezado) + var(--e-4));
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fuente-texto);
+  font-size: var(--t-md);
+  line-height: 1.55;
+  color: var(--tinta);
+  background: var(--papel);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--fuente-titulo);
+  line-height: 1.1;
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: var(--t-xl);
+  font-stretch: 112%;
+}
+
+h3 {
+  font-size: var(--t-lg);
+  font-weight: 700;
+}
+
+p {
+  margin: 0;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: var(--acero);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid var(--acero);
+  outline-offset: 2px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.saltar {
+  position: absolute;
+  left: var(--e-4);
+  top: -3rem;
+  z-index: 100;
+  padding: var(--e-2) var(--e-4);
+  background: var(--tinta);
+  color: var(--blanco);
+  border-radius: var(--radio-sm);
+}
+
+.saltar:focus {
+  top: var(--e-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
