@@ -43,7 +43,7 @@ Quedan para las siguientes entregas: la API REST en Node.js/Express, la base de 
 - **CSS3** con variables, Flexbox, CSS Grid y media queries (diseño adaptable a computador, tableta y celular).
 - **JavaScript** (ES2020, sin frameworks) para la lógica de disponibilidad, la interactividad y el renderizado de datos simulados.
 - **localStorage** para conservar los turnos reservados en el navegador.
-- **Google Fonts** (Archivo y Source Sans 3).
+- Fuentes **Archivo** y **Source Sans 3** (licencia SIL OFL), alojadas en el proyecto para que funcione sin conexión.
 - **Visual Studio Code**, **Git** y **GitHub**.
 
 Se eligió JavaScript sin frameworks para esta fase porque el objetivo es aplicar los fundamentos de desarrollo web. La interfaz se migrará a React cuando se conecte con la API.
@@ -61,11 +61,14 @@ corteya/
 │   ├── data.js             Datos simulados: negocio, barberos, servicios y turnos
 │   ├── agenda.js           Reglas de negocio: horarios, solapamiento y disponibilidad
 │   ├── storage.js          Lectura y escritura segura en localStorage
+│   ├── utils.js            Formatos de fecha y moneda, estado compartido y avisos
 │   ├── ui-catalogo.js      Inicio, servicios y barberos
 │   ├── ui-reserva.js       Formulario de reserva y "Mis turnos"
 │   ├── ui-panel.js         Panel del dueño: indicadores, gráfica y agenda
 │   └── main.js             Navegación y arranque de la aplicación
-├── assets/img/             Logo e ícono
+├── assets/
+│   ├── img/                Logo e ícono
+│   └── fonts/              Fuentes tipográficas y sus licencias
 └── docs/evidencias/        Capturas del prototipo en distintos tamaños de pantalla
 ```
 
@@ -90,7 +93,7 @@ Para volver a los datos iniciales, borrar los datos del sitio en el navegador o 
 |---|---|---|
 | ![Computador](docs/evidencias/escritorio.png) | ![Tableta](docs/evidencias/tableta.png) | ![Celular](docs/evidencias/celular.png) |
 
-Más capturas en [`docs/evidencias`](docs/evidencias): el formulario de reserva, el ticket de confirmación y el panel del dueño.
+Capturas tomadas con la hora del navegador fijada en un martes a las 10:40 a. m., para mostrar la agenda en un día de atención. Más capturas en [`docs/evidencias`](docs/evidencias): el formulario de reserva, el ticket de confirmación y el panel del dueño.
 
 ## Estrategia de ramas
 
