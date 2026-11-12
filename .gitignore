@@ -3,3 +3,8 @@ Thumbs.db
 .vscode/
 node_modules/
 *.log
+.env
+datos/
+*.sqlite
+coverage/
+_site/
