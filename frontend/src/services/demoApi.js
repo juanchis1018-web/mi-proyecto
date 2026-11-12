@@ -6,7 +6,7 @@
  * Aplica las mismas reglas que el backend (shared/agenda.js) y los mismos
  * permisos por rol, para que el comportamiento sea idéntico.
  */
-import { NEGOCIO, ROLES, ESTADOS } from "../../../shared/negocio.js";
+import { NEGOCIO, ROLES, ESTADOS } from "../../shared/negocio.js";
 import {
   franjasDisponibles,
   proximoLibre,
@@ -17,9 +17,9 @@ import {
   aISOFecha,
   inicioDelDia,
   codigoTurno,
-} from "../../../shared/agenda.js";
-import { resumenDelDia } from "../../../shared/reportes.js";
-import { SERVICIOS, BARBEROS, CUENTAS_DEMO, generarTurnos } from "../../../shared/datosIniciales.js";
+} from "../../shared/agenda.js";
+import { resumenDelDia } from "../../shared/reportes.js";
+import { SERVICIOS, BARBEROS, CUENTAS_DEMO, generarTurnos } from "../../shared/datosIniciales.js";
 import { ErrorApi, MENSAJES } from "./errores.js";
 import * as sesion from "./sesion.js";
 import * as validar from "../utils/validaciones.js";

@@ -5,7 +5,7 @@
 import * as router from "./router.js";
 import * as datos from "./services/datos.js";
 import { iniciarEncabezado } from "./components/encabezado.js";
-import { NEGOCIO } from "../../shared/negocio.js";
+import { NEGOCIO } from "../shared/negocio.js";
 
 import inicio from "./pages/inicio.js";
 import reservar from "./pages/reservar.js";

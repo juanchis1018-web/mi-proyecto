@@ -5,8 +5,8 @@ import { confirmar } from "../components/dialogo.js";
 import { avisar, avisarError } from "../components/aviso.js";
 import * as datos from "../services/datos.js";
 import * as f from "../utils/formato.js";
-import { sePuedeCancelar } from "../../../shared/agenda.js";
-import { NEGOCIO } from "../../../shared/negocio.js";
+import { sePuedeCancelar } from "../../shared/agenda.js";
+import { NEGOCIO } from "../../shared/negocio.js";
 
 export default {
   titulo: "Mis turnos",

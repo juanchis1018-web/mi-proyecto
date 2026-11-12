@@ -11,7 +11,7 @@ import * as sesion from "../services/sesion.js";
 import { parametrosConsulta } from "../router.js";
 import * as f from "../utils/formato.js";
 import * as validar from "../utils/validaciones.js";
-import { aISOFecha, desdeISOFecha, sumarMinutos, esDiaHabil } from "../../../shared/agenda.js";
+import { aISOFecha, desdeISOFecha, sumarMinutos, esDiaHabil } from "../../shared/agenda.js";
 
 const PASOS = ["Servicio", "Barbero", "Fecha y hora", "Tus datos"];
 const DIAS_VISIBLES = 7;

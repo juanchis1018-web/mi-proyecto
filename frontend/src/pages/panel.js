@@ -9,7 +9,7 @@ import { avisar, avisarError } from "../components/aviso.js";
 import * as datos from "../services/datos.js";
 import * as sesion from "../services/sesion.js";
 import * as f from "../utils/formato.js";
-import { aISOFecha, desdeISOFecha, esDiaHabil } from "../../../shared/agenda.js";
+import { aISOFecha, desdeISOFecha, esDiaHabil } from "../../shared/agenda.js";
 
 const ACCIONES = {
   PENDIENTE: [

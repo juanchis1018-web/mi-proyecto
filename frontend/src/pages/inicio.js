@@ -4,8 +4,8 @@ import { filtros, avatar } from "../components/tarjetas.js";
 import * as datos from "../services/datos.js";
 import * as sesion from "../services/sesion.js";
 import * as f from "../utils/formato.js";
-import { NEGOCIO, CATEGORIAS } from "../../../shared/negocio.js";
-import { combinar } from "../../../shared/agenda.js";
+import { NEGOCIO, CATEGORIAS } from "../../shared/negocio.js";
+import { combinar } from "../../shared/agenda.js";
 
 function enlaceReserva(parametros) {
   const u = sesion.usuario();

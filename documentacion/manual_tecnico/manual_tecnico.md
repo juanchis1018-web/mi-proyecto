@@ -91,6 +91,8 @@ CorteYa/
 └── package.json
 ```
 
+> **Rutas de `shared/`:** en el navegador, `shared/` se publica junto al frontend (en `/shared`). Por eso los archivos de `frontend/src` la importan como `../../shared/…`, una ruta que funciona en el servidor Express, en el servidor estático y en GitHub Pages (subcarpeta `/CorteYa/`). Abre siempre la aplicación con `npm start` o `npm run start:estatico`, no haciendo doble clic en `index.html`.
+
 ## 5. Dependencias
 
 | Paquete | Uso |

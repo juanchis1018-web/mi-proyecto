@@ -6,7 +6,7 @@ import { avisar, avisarError } from "../components/aviso.js";
 import * as datos from "../services/datos.js";
 import * as f from "../utils/formato.js";
 import * as validar from "../utils/validaciones.js";
-import { CATEGORIAS } from "../../../shared/negocio.js";
+import { CATEGORIAS } from "../../shared/negocio.js";
 
 const REGLAS = {
   nombre: (v) => validar.requerido(v, "El nombre") || (v.trim().length > 60 ? "Máximo 60 caracteres." : ""),

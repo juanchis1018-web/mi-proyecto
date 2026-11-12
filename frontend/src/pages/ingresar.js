@@ -6,7 +6,7 @@ import * as datos from "../services/datos.js";
 import * as sesion from "../services/sesion.js";
 import { parametrosConsulta } from "../router.js";
 import * as validar from "../utils/validaciones.js";
-import { CUENTAS_DEMO, BARBEROS } from "../../../shared/datosIniciales.js";
+import { CUENTAS_DEMO, BARBEROS } from "../../shared/datosIniciales.js";
 
 const REGLAS = { email: validar.email, password: (v) => validar.requerido(v, "La contraseña") };
 

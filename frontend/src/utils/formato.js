@@ -1,5 +1,5 @@
 /** Formatos de moneda, fecha y hora para Colombia. */
-import { inicioDelDia } from "../../../shared/agenda.js";
+import { inicioDelDia } from "../../shared/agenda.js";
 
 const fmtPesos = new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 });
 const fmtHora = new Intl.DateTimeFormat("es-CO", { hour: "numeric", minute: "2-digit", hour12: true });
