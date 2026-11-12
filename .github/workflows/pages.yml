@@ -41,6 +41,9 @@ jobs:
           cp -r frontend/. _site/
           cp -r shared _site/shared
           touch _site/.nojekyll
+          # Pages no ejecuta backend: se fuerza el modo demostración
+          sed -i 's|<meta name="theme-color" content="#14213d">|&\n  <meta name="corteya-modo" content="demo">|' _site/index.html
+          grep -q 'corteya-modo' _site/index.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
