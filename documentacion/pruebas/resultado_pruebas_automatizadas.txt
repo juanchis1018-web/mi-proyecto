@@ -1,0 +1,104 @@
+
+> corteya@3.0.0 test
+> node --test --test-concurrency=1 --test-reporter=spec "tests/**/*.test.js"
+
+✔ registro: crea un cliente y devuelve token sin exponer la contraseña (219.726133ms)
+✔ registro: rechaza correo duplicado con 409 (10.272579ms)
+✔ registro: valida cada campo y responde 422 con detalles (8.416154ms)
+✔ registro: no permite elegir el rol (siempre CLIENTE) (11.479839ms)
+✔ login: credenciales correctas e incorrectas (115.429422ms)
+✔ yo: exige token válido (24.993985ms)
+✔ un token alterado (cambiando el rol) es rechazado (10.676938ms)
+▶ servicios
+  ✔ cualquiera puede ver el catálogo activo (9.239ms)
+  ✔ crear exige sesión (401) y rol administrador (403) (13.081674ms)
+  ✔ valida duración múltiplo de 30, categoría y precio (12.904771ms)
+  ✔ crea, actualiza y desactiva un servicio (54.697724ms)
+  ✔ 404 para un servicio inexistente y 422 para un id inválido (7.575794ms)
+✔ servicios (281.046479ms)
+▶ barberos
+  ✔ lista los barberos con los servicios que prestan (10.88054ms)
+  ✔ rechaza servicios inexistentes y almuerzo invertido (14.909858ms)
+  ✔ crea, edita servicios y desactiva un barbero (46.247604ms)
+  ✔ un barbero no puede administrar el catálogo (11.068901ms)
+✔ barberos (83.715664ms)
+✔ envía cabeceras de seguridad y oculta la tecnología del servidor (147.146315ms)
+✔ intentos de inyección SQL en el login no causan errores ni acceso (31.871098ms)
+✔ parámetros con inyección en filtros son rechazados por validación (18.34181ms)
+✔ el texto con HTML se guarda como texto (el frontend lo muestra sin interpretarlo) (51.703512ms)
+✔ nombres con HTML son rechazados en el registro (6.058864ms)
+✔ JSON mal formado responde 400 con mensaje claro (3.507915ms)
+✔ rutas inexistentes de la API responden 404 en JSON (2.54842ms)
+✔ cuerpos demasiado grandes son rechazados (3.202594ms)
+✔ expone la documentación OpenAPI y métricas (9.236622ms)
+▶ disponibilidad
+  ✔ devuelve 7 días con franjas y excluye el almuerzo del barbero (20.028856ms)
+  ✔ valida los parámetros (12.932412ms)
+✔ disponibilidad (240.066245ms)
+▶ reservas
+  ✔ el cliente reserva un turno a su nombre con el precio vigente (20.745034ms)
+  ✔ rechaza con 409 una reserva que se solapa (10:30 cae dentro de 10:00 a 11:00) (15.331736ms)
+  ✔ la franja ocupada ya no aparece en la disponibilidad (7.20763ms)
+  ✔ de cinco reservas simultáneas para la misma franja solo una se acepta (61.240209ms)
+  ✔ rechaza reservas en el pasado, en el almuerzo, en domingo o de un servicio no prestado (36.070092ms)
+  ✔ el administrador debe indicar el nombre del cliente del local (15.165586ms)
+  ✔ un barbero no puede reservar (3.766095ms)
+✔ reservas (160.534729ms)
+▶ consulta y permisos sobre turnos
+  ✔ cada rol ve solo lo que le corresponde (20.536697ms)
+  ✔ un cliente no puede cancelar el turno de otro (responde 404 para no revelar que existe) (12.090631ms)
+  ✔ un cliente solo puede cancelar, no confirmar ni marcar atendido (15.678277ms)
+  ✔ un barbero no puede cambiar turnos de otro barbero (30.330831ms)
+  ✔ respeta la máquina de estados y no marca atendido un turno futuro (47.443505ms)
+  ✔ el cliente cancela su turno y la franja vuelve a quedar libre (37.530425ms)
+✔ consulta y permisos sobre turnos (164.340493ms)
+▶ reportes
+  ✔ solo el administrador consulta los indicadores (20.336674ms)
+✔ reportes (20.619304ms)
+✔ nombre: exige 3 letras y solo caracteres de nombre (1.967066ms)
+✔ email: formato básico (0.373097ms)
+✔ celular: 10 dígitos que empiezan por 3, admite espacios (0.244945ms)
+✔ password: mínimo 8 caracteres con letras y números (0.463897ms)
+✔ duración del servicio: múltiplo de 30 entre 30 y 180 (2.261584ms)
+✔ hora: formato HH:MM (0.559792ms)
+▶ seSolapan
+  ✔ detecta intervalos que se cruzan (1.694707ms)
+  ✔ intervalos contiguos no se solapan (0.375518ms)
+  ✔ un intervalo contenido en otro se solapa (0.293091ms)
+✔ seSolapan (4.458417ms)
+▶ franjasDisponibles
+  ✔ un día vacío ofrece todas las franjas menos el almuerzo (1.880702ms)
+  ✔ un servicio de 60 minutos no puede empezar a las 11:30 porque cruza el almuerzo (0.714866ms)
+  ✔ excluye las franjas ocupadas por turnos activos y respeta los cancelados (0.952361ms)
+  ✔ ignora los turnos de otros barberos (2.313535ms)
+  ✔ no ofrece horas que ya pasaron (2.911548ms)
+  ✔ el domingo no hay atención (0.429829ms)
+  ✔ no hay franjas si el barbero no presta el servicio o está inactivo (0.544051ms)
+✔ franjasDisponibles (10.793024ms)
+▶ validarReserva
+  ✔ acepta una franja libre y calcula la hora de fin (0.697084ms)
+  ✔ rechaza una franja que se solapa con otro turno (409) (0.57123ms)
+  ✔ rechaza fechas pasadas, muy lejanas o inválidas (0.270657ms)
+  ✔ rechaza un servicio que el barbero no presta (0.198334ms)
+  ✔ rechaza horas que no están alineadas a la agenda (por ejemplo 9:10) (0.314182ms)
+✔ validarReserva (2.330161ms)
+▶ cancelación y estados
+  ✔ se puede cancelar con 2 horas o más de anticipación (0.267607ms)
+  ✔ respeta la máquina de estados (0.130539ms)
+✔ cancelación y estados (0.51989ms)
+▶ utilidades
+  ✔ ocupación descuenta el almuerzo (0.43537ms)
+  ✔ convierte fechas ISO cortas y rechaza fechas imposibles (0.398518ms)
+  ✔ genera códigos de turno legibles (0.1581ms)
+  ✔ encuentra el próximo espacio libre aunque el día esté lleno (1.051269ms)
+✔ utilidades (2.25162ms)
+✔ calcula turnos, cancelados, inasistencias e ingresos del día (1.66666ms)
+✔ un día sin turnos devuelve indicadores en cero (0.282829ms)
+ℹ tests 70
+ℹ suites 11
+ℹ pass 70
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4031.931502
