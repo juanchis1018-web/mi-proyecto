@@ -1,0 +1,9 @@
+node_modules
+datos
+.env
+.git
+.github
+documentacion
+tests
+*.log
+_site

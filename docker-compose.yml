@@ -1,0 +1,29 @@
+# Entorno completo con PostgreSQL: docker compose up --build
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: corteya
+      POSTGRES_USER: corteya
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-corteya_local}
+    volumes:
+      - datos-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U corteya -d corteya"]
+      interval: 5s
+      retries: 10
+
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://corteya:${POSTGRES_PASSWORD:-corteya_local}@db:5432/corteya
+      JWT_SECRET: ${JWT_SECRET:-cambia-esta-clave-en-produccion}
+      SEMBRAR_DATOS: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  datos-postgres:
