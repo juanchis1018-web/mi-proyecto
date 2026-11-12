@@ -1,0 +1,21 @@
+# Despliegue opcional del producto completo (backend + frontend) en Render.com
+# Uso: en Render, "New > Blueprint" y seleccionar este repositorio.
+services:
+  - type: web
+    name: corteya
+    runtime: node
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: node backend/src/server.js
+    healthCheckPath: /api/v1/salud
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TZ
+        value: America/Bogota
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SEMBRAR_DATOS
+        value: "true"
+      # Sin DATABASE_URL usa SQLite (los datos se reinician al reiniciar el servicio).
+      # Para datos permanentes, crear una base PostgreSQL y definir DATABASE_URL.
