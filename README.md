@@ -2,99 +2,70 @@
 
 Plataforma web de gestión de turnos para barberías pyme en Colombia.
 
-CorteYa permite que el cliente consulte la disponibilidad y reserve su turno desde el celular, que el barbero organice su agenda del día y que el dueño del negocio controle servicios, horarios e indicadores como la ocupación y las inasistencias.
+> Estado: **Fase II**. Producto web modular con gestión de usuarios por rol, reservas, panel y administración del catálogo. Los datos se gestionan en el navegador; la integración con la API REST está prevista para la entrega final.
 
-Este repositorio contiene el **prototipo web inicial** (primera fase del proyecto). Funciona con datos simulados y no requiere servidor, base de datos ni autenticación.
+## Problemática
 
-## Integrantes
+La mayoría de las barberías pequeñas toma las citas por llamada, por WhatsApp o en un cuaderno. Eso provoca turnos cruzados, espacios vacíos que nadie sabía que estaban libres, inasistencias sin recordatorio y ninguna información confiable para tomar decisiones.
+
+## Objetivo
+
+Construir una plataforma web que permita a una barbería pyme gestionar sus turnos de forma centralizada y confiable, evitando cruces de horario, reduciendo inasistencias y entregando indicadores para la toma de decisiones.
+
+## Alcance de la Fase II
+
+- Navegación entre páginas con rutas (`#/inicio`, `#/reservar`, `#/mis-turnos`, `#/panel`, `#/admin/servicios`, `#/admin/barberos`, `#/ingresar`, `#/registro`).
+- Gestión de usuarios: registro, inicio de sesión y permisos por rol (cliente, barbero y administrador).
+- Reserva por pasos que solo ofrece horas libres y valida los datos.
+- Mis turnos con historial y cancelación.
+- Panel del dueño con indicadores, gráfica y agenda con filtros y búsqueda.
+- Administración del catálogo de servicios y del equipo de barberos (crear, editar, desactivar).
+- Pruebas automatizadas de las reglas de negocio y de las validaciones.
+
+## Tecnologías
+
+- HTML5, CSS3 (variables, Grid, Flexbox, media queries) y JavaScript con módulos ES.
+- Node.js 20 o superior para el servidor de desarrollo y las pruebas (`node:test`).
+- Git y GitHub con GitFlow y commits convencionales.
+
+## Arquitectura del frontend
+
+```
+frontend/src
+├── main.js          Arranque y definición de rutas
+├── router.js        Enrutador por hash con control de acceso por rol
+├── components/      Piezas reutilizables (formularios, diálogos, tarjetas, avisos)
+├── pages/           Una página por ruta
+├── services/        Acceso a datos y sesión
+└── utils/           Formatos y validaciones
+shared/              Reglas de negocio compartidas (agenda, reportes, datos iniciales)
+```
+
+Las páginas nunca acceden directamente al almacenamiento: usan `services/datos.js`, que en esta fase delega en `demoApi.js`. Esa capa expone la misma interfaz que tendrá la API REST, de modo que en la siguiente fase solo cambia la fuente de datos.
+
+## Instalación y ejecución
+
+Requisitos: Node.js 20 o superior.
+
+```bash
+git clone https://github.com/guachulol0345896-pixel/CorteYa.git
+cd CorteYa
+npm start          # abre http://localhost:3000
+npm test           # ejecuta las pruebas
+```
+
+Cuentas de demostración: `cliente@corteya.co / Cliente123*`, `andres@corteya.co / Barbero123*`, `admin@corteya.co / Admin123*`.
+
+## Estado
+
+**Implementado en la Fase II:** reorganización del código por componentes y páginas, enrutador, sesión y roles, CRUD de servicios y barberos, búsqueda y filtros, panel con selector de fecha, validaciones con mensajes por campo, diálogos accesibles y pruebas automatizadas.
+
+**Pendiente:** backend con API REST, base de datos, autenticación con JWT, despliegue.
+
+**Próximos pasos:** construir la API con Node.js, Express y Sequelize; conectar el frontend; publicar el producto.
+
+## Equipo
 
 - Santiago Rios Duque
 - Isaac Stiven Nuñez Melo
 - Juan Sebastian Muñoz Melo
-
-## Problema que atiende
-
-La mayoría de las barberías pequeñas toma las citas por llamada, por WhatsApp o en un cuaderno. Eso provoca turnos cruzados, espacios vacíos que nadie sabía que estaban libres, inasistencias sin recordatorio y ninguna información confiable para tomar decisiones.
-
-## Objetivo general
-
-Diseñar y construir CorteYa, una plataforma web de gestión de turnos para barberías pyme en Colombia, basada en una API REST con Node.js y Express, una interfaz web y una base de datos relacional, que pueda construirse, probarse y desplegarse en la nube de manera incremental durante el semestre.
-
-## Alcance inicial (esta entrega)
-
-El prototipo representa la funcionalidad principal del producto mínimo viable:
-
-| Sección | Qué permite hacer |
-|---|---|
-| Inicio | Ver en vivo el próximo turno libre de cada barbero. |
-| Servicios | Consultar el catálogo con precio y duración, filtrado por categoría. |
-| Barberos | Conocer al equipo, su especialidad y su próximo espacio libre. |
-| Reservar | Reservar un turno en cuatro pasos: servicio, barbero, fecha y hora, y datos de contacto. Solo se ofrecen horas libres, sin cruces con otros turnos ni con el almuerzo del barbero. |
-| Mis turnos | Ver los turnos reservados en este navegador y cancelarlos. |
-| Panel del dueño | Indicadores del día (turnos, ocupación, inasistencias e ingresos estimados), gráfica de turnos por hora y agenda filtrable donde se marca cada turno como atendido o no asistió. |
-
-Elementos interactivos incluidos: menú de navegación adaptable, filtros de servicios, formulario de reserva por pasos con validación, cálculo de disponibilidad, cancelación de turnos, gráfica del panel y agenda con filtros y cambio de estado.
-
-Quedan para las siguientes entregas: la API REST en Node.js/Express, la base de datos PostgreSQL con Sequelize, la autenticación con JWT y OAuth 2.1, los recordatorios por correo y el despliegue con Docker, Kubernetes y GitHub Actions.
-
-## Tecnologías utilizadas
-
-- **HTML5** semántico (secciones, formularios accesibles, atributos ARIA).
-- **CSS3** con variables, Flexbox, CSS Grid y media queries (diseño adaptable a computador, tableta y celular).
-- **JavaScript** (ES2020, sin frameworks) para la lógica de disponibilidad, la interactividad y el renderizado de datos simulados.
-- **localStorage** para conservar los turnos reservados en el navegador.
-- Fuentes **Archivo** y **Source Sans 3** (licencia SIL OFL), alojadas en el proyecto para que funcione sin conexión.
-- **Visual Studio Code**, **Git** y **GitHub**.
-
-Se eligió JavaScript sin frameworks para esta fase porque el objetivo es aplicar los fundamentos de desarrollo web. La interfaz se migrará a React cuando se conecte con la API.
-
-## Estructura del proyecto
-
-```
-corteya/
-├── index.html              Página principal (todas las secciones)
-├── css/
-│   ├── base.css            Variables de diseño, tipografía y reset
-│   ├── layout.css          Encabezado, navegación, secciones y pie de página
-│   └── components.css      Tarjetas, formulario, ticket, panel y gráfica
-├── js/
-│   ├── data.js             Datos simulados: negocio, barberos, servicios y turnos
-│   ├── agenda.js           Reglas de negocio: horarios, solapamiento y disponibilidad
-│   ├── storage.js          Lectura y escritura segura en localStorage
-│   ├── utils.js            Formatos de fecha y moneda, estado compartido y avisos
-│   ├── ui-catalogo.js      Inicio, servicios y barberos
-│   ├── ui-reserva.js       Formulario de reserva y "Mis turnos"
-│   ├── ui-panel.js         Panel del dueño: indicadores, gráfica y agenda
-│   └── main.js             Navegación y arranque de la aplicación
-├── assets/
-│   ├── img/                Logo e ícono
-│   └── fonts/              Fuentes tipográficas y sus licencias
-└── docs/evidencias/        Capturas del prototipo en distintos tamaños de pantalla
-```
-
-## Cómo ejecutar el prototipo
-
-No necesita instalación.
-
-1. Clonar el repositorio:
-   ```bash
-   git clone https://github.com/<usuario>/corteya.git
-   cd corteya
-   ```
-2. Abrir `index.html` con doble clic en un navegador actualizado (Chrome, Edge, Firefox o Safari).
-
-Opcionalmente, con la extensión **Live Server** de Visual Studio Code: clic derecho sobre `index.html` y luego **Open with Live Server**.
-
-Para volver a los datos iniciales, borrar los datos del sitio en el navegador o usar el botón **Borrar mis turnos** en la sección Mis turnos.
-
-## Evidencias de funcionamiento
-
-| Computador | Tableta | Celular |
-|---|---|---|
-| ![Computador](docs/evidencias/escritorio.png) | ![Tableta](docs/evidencias/tableta.png) | ![Celular](docs/evidencias/celular.png) |
-
-Capturas tomadas con la hora del navegador fijada en un martes a las 10:40 a. m., para mostrar la agenda en un día de atención. Más capturas en [`docs/evidencias`](docs/evidencias): el formulario de reserva, el ticket de confirmación y el panel del dueño.
-
-## Estrategia de ramas
-
-El proyecto sigue GitFlow: `main` guarda las versiones entregadas, `develop` integra el trabajo en curso y cada funcionalidad nueva se desarrolla en una rama `feature/<nombre>` que se integra mediante pull request.
