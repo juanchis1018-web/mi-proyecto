@@ -1,0 +1,64 @@
+@startuml
+!include estilo.iuml
+skinparam dpi 180
+hide circle
+skinparam linetype ortho
+entity "usuarios" as u {
+  * id : INTEGER <<PK>>
+  --
+  nombre : VARCHAR(60)
+  email : VARCHAR(120) <<UQ>>
+  celular : VARCHAR(10)
+  password_hash : VARCHAR(100)
+  rol : VARCHAR(10)
+  activo : BOOLEAN
+  created_at, updated_at
+}
+entity "barberos" as b {
+  * id : INTEGER <<PK>>
+  --
+  usuario_id : INTEGER <<FK, UQ>>
+  nombre : VARCHAR(60)
+  especialidad : VARCHAR(80)
+  experiencia : INTEGER
+  almuerzo_inicio : VARCHAR(5)
+  almuerzo_fin : VARCHAR(5)
+  activo : BOOLEAN
+}
+entity "servicios" as s {
+  * id : INTEGER <<PK>>
+  --
+  nombre : VARCHAR(60)
+  categoria : VARCHAR(10)
+  duracion_min : INTEGER
+  precio : INTEGER
+  descripcion : VARCHAR(200)
+  activo : BOOLEAN
+}
+entity "barbero_servicio" as bs {
+  * barbero_id : INTEGER <<PK, FK>>
+  * servicio_id : INTEGER <<PK, FK>>
+}
+entity "turnos" as t {
+  * id : INTEGER <<PK>>
+  --
+  cliente_id : INTEGER <<FK>> (nulo si es de mostrador)
+  nombre_cliente : VARCHAR(60)
+  celular_cliente : VARCHAR(10)
+  barbero_id : INTEGER <<FK>>
+  servicio_id : INTEGER <<FK>>
+  inicio : DATETIME
+  fin : DATETIME
+  estado : VARCHAR(12)
+  precio : INTEGER
+  nota : VARCHAR(140)
+  origen : VARCHAR(10)
+  índice (barbero_id, inicio)
+}
+u ||--o| b : "tiene perfil"
+b ||--o{ bs
+s ||--o{ bs
+u |o--o{ t : "reserva"
+b ||--o{ t : "atiende"
+s ||--o{ t : "se presta en"
+@enduml

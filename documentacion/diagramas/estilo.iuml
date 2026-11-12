@@ -1,0 +1,21 @@
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 12
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam ArrowColor #2F4858
+skinparam packageBorderColor #2F4858
+skinparam componentBorderColor #2F4858
+skinparam componentBackgroundColor #EAF2F8
+skinparam classBorderColor #2F4858
+skinparam classBackgroundColor #F8FBFD
+skinparam classHeaderBackgroundColor #D6E6F2
+skinparam usecaseBorderColor #2F4858
+skinparam usecaseBackgroundColor #EAF2F8
+skinparam actorBorderColor #2F4858
+skinparam databaseBackgroundColor #FDF2E9
+skinparam nodeBackgroundColor #F4F6F7
+skinparam entityBorderColor #2F4858
+skinparam entityBackgroundColor #F8FBFD
+skinparam participantBackgroundColor #EAF2F8
+skinparam participantBorderColor #2F4858
+skinparam sequenceLifeLineBorderColor #7F8C8D

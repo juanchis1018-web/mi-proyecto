@@ -1,0 +1,36 @@
+@startuml
+!include estilo.iuml
+skinparam dpi 180
+hide footbox
+actor Cliente
+participant "Página Reservar\n(frontend)" as UI
+participant "api.js" as API
+participant "Middlewares\nJWT + validación" as MW
+participant "AgendaService" as AS
+participant "shared/agenda" as AG
+database "Base de datos" as DB
+Cliente -> UI : Elige servicio, barbero y día
+UI -> API : disponibilidad(barbero, servicio, 7 días)
+API -> AS : GET /barberos/:id/disponibilidad
+AS -> DB : turnos que ocupan la agenda
+AS -> AG : franjasDisponibles()
+AS --> UI : días con franjas libres
+Cliente -> UI : Elige la hora y confirma
+UI -> API : reservar(...)
+API -> MW : POST /turnos (Bearer JWT)
+MW -> MW : verifica token, rol y datos
+MW -> AS : reservar(usuario, datos)
+AS -> AS : cola por barbero
+AS -> DB : BEGIN; bloquea al barbero (FOR UPDATE)
+AS -> DB : turnos del día
+AS -> AG : validarReserva()
+alt Franja libre
+  AS -> DB : INSERT turno (PENDIENTE); COMMIT
+  AS --> UI : 201 Created + código del turno
+  UI --> Cliente : Ticket de confirmación
+else Franja ocupada
+  AS -> DB : ROLLBACK
+  AS --> UI : 409 Conflict
+  UI --> Cliente : Vuelve al paso de horario\ncon el mensaje del error
+end
+@enduml

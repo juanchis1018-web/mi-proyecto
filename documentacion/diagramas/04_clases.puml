@@ -1,0 +1,87 @@
+@startuml
+!include estilo.iuml
+skinparam dpi 180
+enum Rol {
+  CLIENTE
+  BARBERO
+  ADMIN
+}
+enum EstadoTurno {
+  PENDIENTE
+  CONFIRMADO
+  ATENDIDO
+  NO_ASISTIO
+  CANCELADO
+}
+class Usuario {
+  id : int
+  nombre : string
+  email : string
+  celular : string
+  passwordHash : string
+  rol : Rol
+  activo : bool
+}
+class Barbero {
+  id : int
+  nombre : string
+  especialidad : string
+  experiencia : int
+  almuerzoInicio : "HH:MM"
+  almuerzoFin : "HH:MM"
+  activo : bool
+}
+class Servicio {
+  id : int
+  nombre : string
+  categoria : string
+  duracionMin : int
+  precio : int
+  activo : bool
+}
+class Turno {
+  id : int
+  nombreCliente : string
+  inicio : Date
+  fin : Date
+  estado : EstadoTurno
+  precio : int
+  nota : string
+  origen : WEB | MOSTRADOR
+}
+class AgendaService <<servicio>> {
+  + disponibilidad(barberoId, servicioId, desde, dias)
+  + proximosLibres(servicioId)
+  + listarTurnos(usuario, filtros)
+  + reservar(usuario, datos)
+  + cambiarEstado(usuario, id, estado)
+}
+class AuthService <<servicio>> {
+  + registrar(datos)
+  + iniciarSesion(email, password)
+  + verificarToken(token)
+}
+class CatalogoService <<servicio>> {
+  + listar / crear / actualizar / desactivar
+}
+class "shared/agenda" as Agenda <<módulo>> {
+  + franjasDisponibles(...)
+  + validarReserva(...)
+  + seSolapan(a, b)
+  + puedeTransicionar(desde, hacia)
+  + sePuedeCancelar(turno)
+  + ocupacion(...)
+}
+Usuario "1" -- "0..1" Barbero : perfil
+Barbero "*" -- "*" Servicio : presta
+Usuario "0..1" -- "*" Turno : reserva
+Barbero "1" -- "*" Turno : atiende
+Servicio "1" -- "*" Turno
+Usuario ..> Rol
+Turno ..> EstadoTurno
+AgendaService ..> Agenda : usa
+AgendaService ..> Turno
+CatalogoService ..> Servicio
+CatalogoService ..> Barbero
+AuthService ..> Usuario
+@enduml

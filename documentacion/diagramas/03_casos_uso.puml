@@ -1,0 +1,46 @@
+@startuml
+!include estilo.iuml
+skinparam dpi 180
+left to right direction
+actor "Visitante" as VI
+actor "Cliente" as CL
+actor "Barbero" as BA
+actor "Administrador\n(dueño)" as AD
+CL -|> VI
+rectangle "CorteYa" {
+  usecase "Consultar servicios,\nprecios y barberos" as UC1
+  usecase "Consultar disponibilidad" as UC2
+  usecase "Registrarse" as UC3
+  usecase "Iniciar sesión" as UC4
+  usecase "Reservar turno" as UC5
+  usecase "Validar franja libre\n(sin solapamiento)" as UC5a
+  usecase "Consultar mis turnos" as UC6
+  usecase "Cancelar turno\n(hasta 2 h antes)" as UC7
+  usecase "Consultar agenda del día" as UC8
+  usecase "Cambiar estado del turno" as UC9
+  usecase "Registrar turno\nde mostrador" as UC10
+  usecase "Gestionar servicios (CRUD)" as UC11
+  usecase "Gestionar barberos (CRUD)" as UC12
+  usecase "Consultar indicadores" as UC13
+}
+VI --> UC1
+VI --> UC2
+VI --> UC3
+CL --> UC4
+CL --> UC5
+CL --> UC6
+CL --> UC7
+BA --> UC4
+BA --> UC8
+BA --> UC9
+AD --> UC4
+AD --> UC8
+AD --> UC9
+AD --> UC10
+AD --> UC11
+AD --> UC12
+AD --> UC13
+UC5 ..> UC5a : <<include>>
+UC10 ..> UC5a : <<include>>
+UC5 ..> UC2 : <<include>>
+@enduml

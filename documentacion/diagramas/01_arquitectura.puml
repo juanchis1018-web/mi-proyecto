@@ -1,0 +1,45 @@
+@startuml
+!include estilo.iuml
+skinparam dpi 180
+package "Navegador" {
+  package "frontend/src (JavaScript, módulos ES)" as FE {
+    [pages/\nuna página por ruta] as PG
+    [components/\nformularios, diálogos,\ntarjetas, avisos] as CMP
+    [router.js\nrutas y control por rol] as RT
+    [services/datos.js\nfuente de datos] as DS
+    [services/api.js\nfetch + JWT] as API
+    [services/demoApi.js\nlocalStorage] as DEMO
+  }
+}
+package "shared/ (reglas de negocio comunes)" as SH {
+  [agenda.js\nfranjas, solapamiento,\nestados] as AG
+  [reportes.js\nindicadores] as RP
+}
+package "backend/src (Node.js + Express)" as BE {
+  package "Presentación" {
+    [routes/ + middlewares/\nHelmet, CORS, JWT,\nvalidación, errores] as R
+    [controllers/] as C
+  }
+  package "Aplicación" {
+    [services/\nAuth, Catálogo,\nAgenda, Reportes] as S
+  }
+  package "Infraestructura" {
+    [models/ (Sequelize)] as M
+  }
+}
+database "SQLite (desarrollo)\nPostgreSQL (producción)" as DB
+RT --> PG
+PG --> CMP
+PG --> DS
+DS --> API : backend disponible
+DS --> DEMO : sin backend
+API --> R : HTTPS / JSON\n/api/v1
+R --> C
+C --> S
+S --> M
+M --> DB
+S ..> AG
+S ..> RP
+DEMO ..> AG
+DEMO ..> RP
+@enduml

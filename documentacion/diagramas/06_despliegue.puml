@@ -1,0 +1,25 @@
+@startuml
+!include estilo.iuml
+skinparam dpi 180
+actor "Usuarios" as U
+node "GitHub" {
+  [Repositorio\n(main, develop, feature/*)] as REPO
+  [GitHub Actions\nCI: npm test (Node 20 y 22)] as CI
+  node "GitHub Pages" as PAGES {
+    [Frontend estático\nmodo demostración] as FEP
+  }
+}
+node "Servidor Node.js\n(Render, Docker o local)" as SRV {
+  [Express\nAPI /api/v1 + frontend] as APP
+  [/api/docs (Swagger)] as DOC
+  [/metrics (Prometheus)] as MET
+}
+database "PostgreSQL\n(o SQLite)" as DB
+REPO --> CI : push / pull request
+CI --> PAGES : despliegue si las pruebas pasan
+U --> FEP : HTTPS
+U --> APP : HTTPS
+APP --> DB
+APP -- DOC
+APP -- MET
+@enduml
