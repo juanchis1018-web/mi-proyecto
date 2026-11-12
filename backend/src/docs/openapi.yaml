@@ -1,0 +1,443 @@
+openapi: 3.0.3
+info:
+  title: CorteYa API
+  version: 3.0.0
+  description: |
+    API REST de CorteYa, plataforma de gestión de turnos para barberías pyme.
+
+    **Autenticación:** inicia sesión en `POST /auth/login` y envía el token en la cabecera
+    `Authorization: Bearer <token>`. Usa el botón **Authorize** para probar las rutas protegidas.
+
+    Cuentas de demostración: `admin@corteya.co / Admin123*`, `andres@corteya.co / Barbero123*`,
+    `cliente@corteya.co / Cliente123*`.
+
+    Todas las fechas y horas se envían en ISO 8601 (UTC). Las fechas de día usan `AAAA-MM-DD`
+    y se interpretan en la zona horaria de la barbería (America/Bogota).
+servers:
+  - url: /api/v1
+tags:
+  - name: Sistema
+  - name: Autenticación
+  - name: Servicios
+  - name: Barberos
+  - name: Turnos
+  - name: Reportes
+
+paths:
+  /salud:
+    get:
+      tags: [Sistema]
+      summary: Verifica que la API esté en línea
+      responses:
+        "200":
+          description: API disponible
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  estado: { type: string, example: ok }
+                  modo: { type: string, example: api }
+                  hora: { type: string, format: date-time }
+
+  /auth/registro:
+    post:
+      tags: [Autenticación]
+      summary: Crea una cuenta de cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/Registro" }
+      responses:
+        "201": { description: Cuenta creada, content: { application/json: { schema: { $ref: "#/components/schemas/Sesion" } } } }
+        "409": { $ref: "#/components/responses/Conflicto" }
+        "422": { $ref: "#/components/responses/Validacion" }
+        "429": { $ref: "#/components/responses/DemasiadosIntentos" }
+
+  /auth/login:
+    post:
+      tags: [Autenticación]
+      summary: Inicia sesión y devuelve un token JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email, example: admin@corteya.co }
+                password: { type: string, example: Admin123* }
+      responses:
+        "200": { description: Sesión iniciada, content: { application/json: { schema: { $ref: "#/components/schemas/Sesion" } } } }
+        "401": { $ref: "#/components/responses/NoAutenticado" }
+        "422": { $ref: "#/components/responses/Validacion" }
+        "429": { $ref: "#/components/responses/DemasiadosIntentos" }
+
+  /auth/yo:
+    get:
+      tags: [Autenticación]
+      summary: Datos del usuario autenticado
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: Usuario, content: { application/json: { schema: { $ref: "#/components/schemas/Usuario" } } } }
+        "401": { $ref: "#/components/responses/NoAutenticado" }
+
+  /servicios:
+    get:
+      tags: [Servicios]
+      summary: Lista los servicios activos
+      parameters:
+        - in: query
+          name: todos
+          schema: { type: boolean }
+          description: Incluye los desactivados (solo administrador)
+      responses:
+        "200": { description: Servicios, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Servicio" } } } } }
+    post:
+      tags: [Servicios]
+      summary: Crea un servicio
+      security: [{ bearerAuth: [] }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/ServicioEntrada" } } } }
+      responses:
+        "201": { description: Creado, content: { application/json: { schema: { $ref: "#/components/schemas/Servicio" } } } }
+        "401": { $ref: "#/components/responses/NoAutenticado" }
+        "403": { $ref: "#/components/responses/Prohibido" }
+        "422": { $ref: "#/components/responses/Validacion" }
+
+  /servicios/{id}:
+    parameters: [{ $ref: "#/components/parameters/Id" }]
+    get:
+      tags: [Servicios]
+      summary: Obtiene un servicio
+      responses:
+        "200": { description: Servicio, content: { application/json: { schema: { $ref: "#/components/schemas/Servicio" } } } }
+        "404": { $ref: "#/components/responses/NoEncontrado" }
+    put:
+      tags: [Servicios]
+      summary: Actualiza un servicio (campos parciales)
+      security: [{ bearerAuth: [] }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/ServicioEntrada" } } } }
+      responses:
+        "200": { description: Actualizado, content: { application/json: { schema: { $ref: "#/components/schemas/Servicio" } } } }
+        "403": { $ref: "#/components/responses/Prohibido" }
+        "404": { $ref: "#/components/responses/NoEncontrado" }
+        "422": { $ref: "#/components/responses/Validacion" }
+    delete:
+      tags: [Servicios]
+      summary: Desactiva un servicio (borrado lógico)
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: Desactivado, content: { application/json: { schema: { $ref: "#/components/schemas/Servicio" } } } }
+        "403": { $ref: "#/components/responses/Prohibido" }
+        "404": { $ref: "#/components/responses/NoEncontrado" }
+
+  /barberos:
+    get:
+      tags: [Barberos]
+      summary: Lista los barberos activos
+      parameters:
+        - in: query
+          name: todos
+          schema: { type: boolean }
+          description: Incluye los desactivados (solo administrador)
+      responses:
+        "200": { description: Barberos, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Barbero" } } } } }
+    post:
+      tags: [Barberos]
+      summary: Crea un barbero
+      security: [{ bearerAuth: [] }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/BarberoEntrada" } } } }
+      responses:
+        "201": { description: Creado, content: { application/json: { schema: { $ref: "#/components/schemas/Barbero" } } } }
+        "403": { $ref: "#/components/responses/Prohibido" }
+        "422": { $ref: "#/components/responses/Validacion" }
+
+  /barberos/proximos-libres:
+    get:
+      tags: [Barberos]
+      summary: Próximo espacio libre de cada barbero
+      parameters:
+        - in: query
+          name: servicioId
+          schema: { type: integer, default: 1 }
+      responses:
+        "200":
+          description: Próximo espacio por barbero (null si no hay en 7 días)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    barbero: { type: object, properties: { id: { type: integer }, nombre: { type: string } } }
+                    franja: { $ref: "#/components/schemas/Franja" }
+
+  /barberos/{id}:
+    parameters: [{ $ref: "#/components/parameters/Id" }]
+    get:
+      tags: [Barberos]
+      summary: Obtiene un barbero
+      responses:
+        "200": { description: Barbero, content: { application/json: { schema: { $ref: "#/components/schemas/Barbero" } } } }
+        "404": { $ref: "#/components/responses/NoEncontrado" }
+    put:
+      tags: [Barberos]
+      summary: Actualiza un barbero (campos parciales)
+      security: [{ bearerAuth: [] }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/BarberoEntrada" } } } }
+      responses:
+        "200": { description: Actualizado, content: { application/json: { schema: { $ref: "#/components/schemas/Barbero" } } } }
+        "403": { $ref: "#/components/responses/Prohibido" }
+        "404": { $ref: "#/components/responses/NoEncontrado" }
+        "422": { $ref: "#/components/responses/Validacion" }
+    delete:
+      tags: [Barberos]
+      summary: Desactiva un barbero (borrado lógico)
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: Desactivado, content: { application/json: { schema: { $ref: "#/components/schemas/Barbero" } } } }
+        "403": { $ref: "#/components/responses/Prohibido" }
+        "404": { $ref: "#/components/responses/NoEncontrado" }
+
+  /barberos/{id}/disponibilidad:
+    get:
+      tags: [Barberos]
+      summary: Franjas libres del barbero para un servicio
+      parameters:
+        - $ref: "#/components/parameters/Id"
+        - { in: query, name: servicioId, required: true, schema: { type: integer }, example: 1 }
+        - { in: query, name: desde, schema: { type: string, example: "2026-11-12" }, description: "Día inicial (por defecto hoy)" }
+        - { in: query, name: dias, schema: { type: integer, minimum: 1, maximum: 14, default: 7 } }
+      responses:
+        "200":
+          description: Franjas por día
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    fecha: { type: string, example: "2026-11-12" }
+                    franjas: { type: array, items: { $ref: "#/components/schemas/Franja" } }
+        "404": { $ref: "#/components/responses/NoEncontrado" }
+        "422": { $ref: "#/components/responses/Validacion" }
+
+  /turnos:
+    get:
+      tags: [Turnos]
+      summary: Lista turnos según el rol
+      description: Cliente ve sus turnos, barbero su agenda y administrador todos.
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { in: query, name: fecha, schema: { type: string, example: "2026-11-12" } }
+        - { in: query, name: barberoId, schema: { type: integer }, description: Solo administrador }
+        - { in: query, name: estado, schema: { $ref: "#/components/schemas/Estado" } }
+      responses:
+        "200": { description: Turnos, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Turno" } } } } }
+        "401": { $ref: "#/components/responses/NoAutenticado" }
+    post:
+      tags: [Turnos]
+      summary: Reserva un turno
+      description: |
+        El cliente reserva a su nombre. El administrador registra turnos de clientes del local
+        y debe enviar `nombreCliente`. Responde **409** si la franja ya está ocupada.
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [barberoId, servicioId, inicio]
+              properties:
+                barberoId: { type: integer, example: 1 }
+                servicioId: { type: integer, example: 2 }
+                inicio: { type: string, format: date-time, example: "2026-11-12T15:00:00.000Z" }
+                nota: { type: string, maxLength: 140 }
+                nombreCliente: { type: string, description: Obligatorio para el administrador }
+                celularCliente: { type: string, example: "3104567890" }
+      responses:
+        "201": { description: Turno reservado, content: { application/json: { schema: { $ref: "#/components/schemas/Turno" } } } }
+        "400": { $ref: "#/components/responses/Solicitud" }
+        "401": { $ref: "#/components/responses/NoAutenticado" }
+        "403": { $ref: "#/components/responses/Prohibido" }
+        "409": { $ref: "#/components/responses/Conflicto" }
+        "422": { $ref: "#/components/responses/Validacion" }
+
+  /turnos/{id}/estado:
+    patch:
+      tags: [Turnos]
+      summary: Cambia el estado de un turno
+      description: |
+        Transiciones: PENDIENTE → CONFIRMADO | CANCELADO; CONFIRMADO → ATENDIDO | NO_ASISTIO | CANCELADO.
+        El cliente solo puede cancelar sus turnos, hasta 2 horas antes. El barbero solo cambia turnos de su agenda.
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estado]
+              properties:
+                estado: { $ref: "#/components/schemas/Estado" }
+      responses:
+        "200": { description: Turno actualizado, content: { application/json: { schema: { $ref: "#/components/schemas/Turno" } } } }
+        "400": { $ref: "#/components/responses/Solicitud" }
+        "403": { $ref: "#/components/responses/Prohibido" }
+        "404": { $ref: "#/components/responses/NoEncontrado" }
+
+  /reportes/resumen:
+    get:
+      tags: [Reportes]
+      summary: Indicadores del día
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { in: query, name: fecha, schema: { type: string, example: "2026-11-12" } }
+      responses:
+        "200": { description: Indicadores, content: { application/json: { schema: { $ref: "#/components/schemas/Resumen" } } } }
+        "403": { $ref: "#/components/responses/Prohibido" }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    Id:
+      in: path
+      name: id
+      required: true
+      schema: { type: integer, minimum: 1 }
+
+  schemas:
+    Estado:
+      type: string
+      enum: [PENDIENTE, CONFIRMADO, ATENDIDO, NO_ASISTIO, CANCELADO]
+    Rol:
+      type: string
+      enum: [CLIENTE, BARBERO, ADMIN]
+    Registro:
+      type: object
+      required: [nombre, email, celular, password]
+      properties:
+        nombre: { type: string, example: Laura Gómez }
+        email: { type: string, format: email, example: laura@correo.com }
+        celular: { type: string, example: "3001234567" }
+        password: { type: string, minLength: 8, example: Corte2026 }
+    Usuario:
+      type: object
+      properties:
+        id: { type: integer }
+        nombre: { type: string }
+        email: { type: string }
+        celular: { type: string }
+        rol: { $ref: "#/components/schemas/Rol" }
+        barberoId: { type: integer, nullable: true }
+    Sesion:
+      type: object
+      properties:
+        token: { type: string }
+        usuario: { $ref: "#/components/schemas/Usuario" }
+    ServicioEntrada:
+      type: object
+      properties:
+        nombre: { type: string, example: Corte clásico }
+        categoria: { type: string, enum: [corte, barba, combo] }
+        duracionMin: { type: integer, example: 30, description: Múltiplo de 30, entre 30 y 180 }
+        precio: { type: integer, example: 25000 }
+        descripcion: { type: string }
+        activo: { type: boolean }
+    Servicio:
+      allOf:
+        - $ref: "#/components/schemas/ServicioEntrada"
+        - type: object
+          properties:
+            id: { type: integer }
+    BarberoEntrada:
+      type: object
+      properties:
+        nombre: { type: string, example: Andrés Cárdenas }
+        especialidad: { type: string, example: Degradados y diseños }
+        experiencia: { type: integer, example: 8 }
+        servicios: { type: array, items: { type: integer }, example: [1, 2, 7] }
+        almuerzoInicio: { type: string, example: "12:00" }
+        almuerzoFin: { type: string, example: "13:00" }
+        activo: { type: boolean }
+    Barbero:
+      allOf:
+        - $ref: "#/components/schemas/BarberoEntrada"
+        - type: object
+          properties:
+            id: { type: integer }
+            usuarioId: { type: integer, nullable: true }
+    Franja:
+      type: object
+      nullable: true
+      properties:
+        inicio: { type: string, format: date-time }
+        fin: { type: string, format: date-time }
+    Turno:
+      type: object
+      properties:
+        id: { type: integer }
+        codigo: { type: string, example: A-042 }
+        clienteId: { type: integer, nullable: true }
+        nombreCliente: { type: string }
+        celularCliente: { type: string, nullable: true }
+        barberoId: { type: integer }
+        servicioId: { type: integer }
+        inicio: { type: string, format: date-time }
+        fin: { type: string, format: date-time }
+        estado: { $ref: "#/components/schemas/Estado" }
+        precio: { type: integer }
+        nota: { type: string }
+        origen: { type: string, enum: [WEB, MOSTRADOR] }
+        barbero: { type: object, properties: { id: { type: integer }, nombre: { type: string } } }
+        servicio: { type: object, properties: { id: { type: integer }, nombre: { type: string }, duracionMin: { type: integer } } }
+    Resumen:
+      type: object
+      properties:
+        fecha: { type: string, format: date-time }
+        totalTurnos: { type: integer }
+        cancelados: { type: integer }
+        ocupacionPromedio: { type: number, example: 0.74 }
+        turnosCumplidos: { type: integer }
+        inasistencias: { type: integer }
+        tasaInasistencia: { type: number, example: 0.12 }
+        ingresos: { type: integer }
+        ingresosProyectados: { type: integer }
+        porHora: { type: array, items: { type: object, properties: { hora: { type: integer }, turnos: { type: integer } } } }
+        porBarbero: { type: array, items: { type: object, properties: { barberoId: { type: integer }, nombre: { type: string }, ocupacion: { type: number }, turnos: { type: integer } } } }
+        serviciosMasVendidos: { type: array, items: { type: object, properties: { servicioId: { type: integer }, cantidad: { type: integer } } } }
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status: { type: integer }
+            mensaje: { type: string }
+            detalles:
+              type: array
+              items:
+                type: object
+                properties:
+                  campo: { type: string }
+                  mensaje: { type: string }
+
+  responses:
+    Solicitud: { description: Solicitud no válida por reglas de negocio, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+    NoAutenticado: { description: Falta el token o no es válido, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+    Prohibido: { description: El rol no tiene permiso, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+    NoEncontrado: { description: El recurso no existe, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+    Conflicto: { description: Conflicto (franja ocupada o registro duplicado), content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+    Validacion: { description: Datos de entrada inválidos, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+    DemasiadosIntentos: { description: Demasiados intentos, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
