@@ -95,17 +95,6 @@
   border-bottom: 0;
 }
 
-.tablero__iniciales {
-  display: grid;
-  place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  background: var(--tinta-suave);
-  font-weight: 700;
-  font-size: var(--t-sm);
-}
-
 .tablero__nombre {
   font-weight: 600;
   line-height: 1.25;
@@ -209,9 +198,6 @@
   grid-column: 1 / -1;
   justify-self: start;
   margin-top: var(--e-1);
-  padding: 0;
-  border: 0;
-  background: none;
   color: var(--rojo);
   font-weight: 700;
   font-size: var(--t-sm);
@@ -233,25 +219,6 @@
   padding: var(--e-5);
   background: var(--papel);
   border-radius: var(--radio);
-}
-
-.barbero__foto {
-  display: grid;
-  place-items: center;
-  width: 4rem;
-  height: 4rem;
-  margin-bottom: var(--e-2);
-  border-radius: 50%;
-  background: var(--tinta);
-  color: var(--blanco);
-  font-family: var(--fuente-titulo);
-  font-weight: 800;
-  font-stretch: 115%;
-  font-size: var(--t-lg);
-}
-
-.barbero:nth-child(2n) .barbero__foto {
-  background: var(--acero);
 }
 
 .barbero__especialidad {
@@ -1052,7 +1019,7 @@
   }
 
   .reserva__cuerpo {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .ticket {
