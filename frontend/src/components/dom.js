@@ -11,6 +11,8 @@ export function crear(etiqueta, atributos = {}, hijos = []) {
     else if (clave === "dataset") Object.assign(el.dataset, valor);
     else if (clave.startsWith("on") && typeof valor === "function") el.addEventListener(clave.slice(2), valor);
     else if (clave === "value") el.value = valor;
+    // Los estilos se asignan por CSSOM: la política de seguridad (CSP) bloquea el atributo style
+    else if (clave === "style") el.style.cssText = valor;
     else el.setAttribute(clave, valor === true ? "" : valor);
   }
   for (const hijo of [].concat(hijos)) {
