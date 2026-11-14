@@ -4,7 +4,7 @@
 
 El cliente reserva desde el celular solo en horas realmente libres, el barbero organiza su agenda del día y el dueño administra servicios, equipo e indicadores del negocio.
 
-- **Producto publicado (modo demostración):** <https://guachulol0345896-pixel.github.io/CorteYa/>
+- **Producto publicado (modo demostración):** <https://juanchis1018-web.github.io/mi-proyecto/>
 - **Documentación de la API (al ejecutar localmente):** <http://localhost:3000/api/docs>
 - **Estado:** versión final `v3.0.0`
 
@@ -69,17 +69,16 @@ Detalle en [documentacion/arquitectura/arquitectura.md](documentacion/arquitectu
 ### Estructura del proyecto
 
 ```
-CorteYa/
-├── backend/src/        API REST: config, db, models, services, controllers, routes, middlewares, docs
-├── frontend/           index.html, css/, assets/, src/ (components, pages, services, utils)
-├── shared/             Reglas de negocio compartidas: agenda, reportes, negocio, datos iniciales
-├── tests/              Pruebas: shared/, frontend/, backend/
-├── documentacion/      arquitectura, diagramas, requerimientos, pruebas, manual_usuario,
-│                       manual_tecnico, decisiones_tecnicas, sustentacion, entregas
-├── scripts/            Servidor estático para el modo demostración
-├── .github/workflows/  ci.yml (pruebas) y pages.yml (despliegue)
+mi-proyecto/
+├── backend/src/       API REST: config, db, models, services, controllers, routes, middlewares, docs
+├── frontend/          index.html, css/, assets/, src/ (components, pages, services, utils)
+├── shared/            Reglas de negocio compartidas: agenda, reportes, negocio, datos iniciales
+├── tests/             Pruebas: shared/, frontend/, backend/
+├── documentacion/     arquitectura, diagramas, requerimientos, pruebas, manual_usuario,
+│                      manual_tecnico, decisiones_tecnicas, sustentacion, entregas
+├── scripts/           Servidor estático para el modo demostración
 ├── Dockerfile, docker-compose.yml, render.yaml
-├── .env.example        Plantilla de configuración (el .env real no se sube)
+├── .env.example       Plantilla de configuración (el .env real no se sube)
 └── package.json
 ```
 
@@ -95,8 +94,8 @@ Producción: `express`, `sequelize`, `sqlite3`, `pg`, `pg-hstore`, `bcryptjs`, `
 ### Instalación
 
 ```bash
-git clone https://github.com/guachulol0345896-pixel/CorteYa.git
-cd CorteYa
+git clone https://github.com/juanchis1018-web/mi-proyecto.git
+cd mi-proyecto
 npm install
 cp .env.example .env        # en Windows: copy .env.example .env
 ```
@@ -108,7 +107,7 @@ Las variables están documentadas en [`.env.example`](.env.example). Las princip
 ### Ejecución
 
 ```bash
-npm start          # http://localhost:3000 (aplicación y API)
+npm start         # http://localhost:3000 (aplicación y API)
 npm run seed       # reinicia la base con datos de demostración de la semana actual
 npm test           # 70 pruebas automatizadas
 npm run dev        # modo desarrollo con recarga automática
@@ -145,7 +144,7 @@ Con Docker y PostgreSQL: `docker compose up --build`.
 - Base de datos relacional mediante ORM (SQLite o PostgreSQL).
 - Documentación OpenAPI servida por la propia API (`/api/docs`).
 - Métricas en formato Prometheus (`/metrics`).
-- GitHub Actions para pruebas y publicación en GitHub Pages.
+- GitHub Actions y GitHub Pages para despliegue directo.
 
 ---
 
@@ -167,10 +166,10 @@ Plan, casos y evidencias: [documentacion/pruebas/plan_y_resultados.md](documenta
 
 | Entorno | Dirección | Plataforma | Acceso |
 |---|---|---|---|
-| Producto publicado (modo demostración) | <https://guachulol0345896-pixel.github.io/CorteYa/> | GitHub Pages, publicado por GitHub Actions en cada push a `main` | Abrir el enlace y usar las cuentas de demostración. Los datos se guardan en el navegador. |
+| Producto publicado (modo demostración) | <https://juanchis1018-web.github.io/mi-proyecto/> | GitHub Pages | Abrir el enlace y usar las cuentas de demostración. Los datos se guardan en el navegador. |
 | Producto completo | `http://localhost:3000` | Node.js local, Docker o Render (`render.yaml`) | Seguir la sección Ejecución |
 
-Para activar GitHub Pages: **Settings → Pages → Source: GitHub Actions**. Instrucciones de Render y Docker en el [manual técnico](documentacion/manual_tecnico/manual_tecnico.md).
+Instrucciones de Render y Docker en el [manual técnico](documentacion/manual_tecnico/manual_tecnico.md).
 
 ---
 
@@ -196,7 +195,7 @@ Para activar GitHub Pages: **Settings → Pages → Source: GitHub Actions**. In
 |---|---|---|
 | Fase I: repositorio y prototipo | `v1.0.0-fase1` | Página principal en HTML, CSS y JavaScript con datos simulados |
 | Fase II: producto web modular | `v2.0.0-fase2` | Componentes y páginas, enrutador, roles, CRUD, pruebas de reglas de negocio |
-| Entrega final | `v3.0.0-final` | Backend con API REST, base de datos, JWT, seguridad, integración, CI/CD, despliegue y documentación completa |
+| Entrega final | `v3.0.0-final` | Backend con API REST, base de datos, JWT, seguridad, integración, despliegue y documentación completa |
 
 Para ver el código de una fase: `git checkout v2.0.0-fase2`.
 
@@ -208,13 +207,13 @@ Para ver el código de una fase: `git checkout v2.0.0-fase2`.
 |---|---|
 | Santiago Rios Duque | Backend, API REST y base de datos |
 | Isaac Stiven Nuñez Melo | Frontend, experiencia de usuario y diseño adaptable |
-| Juan Sebastian Muñoz Melo | Seguridad, pruebas, integración continua y despliegue |
+| Juan Sebastian Muñoz Melo | Seguridad, pruebas y despliegue |
 
 ---
 
 ## Estado final
 
-**Terminado:** todos los requerimientos funcionales RF-01 a RF-13, la API documentada, las pruebas automatizadas, la integración continua y la publicación en GitHub Pages.
+**Terminado:** todos los requerimientos funcionales RF-01 a RF-13, la API documentada, las pruebas automatizadas y la publicación en GitHub Pages.
 
 **Limitaciones conocidas**
 
